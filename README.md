@@ -5,7 +5,7 @@
 A pixel-perfect clone of the Spotify homepage built using pure HTML and CSS. This project captures the modern, dark-themed aesthetic of Spotify’s interface, showcasing my ability to translate complex UI designs into clean and responsive code.
 
 ## 🚀 Live Demo
-👉 [View Live](https://yourusername.github.io/spotify-clone)
+👉 [View Live](https://shaqran92.github.io/Spotify-Clone/)
 
 ## 💡 Features
 - Dark UI with clean layout
