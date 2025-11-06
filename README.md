@@ -34,12 +34,5 @@ No frameworks used — every feature is hand-coded for full control, clean struc
 
 🔗 [[View Live Project](https://shaqran92.github.io/Spotify-Clone/)]
 
-*(Replace `#` with your live site and repo links)*
 
 ---
-
-## 📦 Installation  
-
-1. **Clone this repository**
-   ```bash
-   git clone https://github.com/yourusername/optimized-spotify-clone.git
