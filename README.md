@@ -32,8 +32,7 @@ No frameworks used — every feature is hand-coded for full control, clean struc
 
 ## 🚀 Live Demo  
 
-🔗 [View Live Project](#)  
-💻 [GitHub Repository](#)
+🔗 [[View Live Project](https://shaqran92.github.io/Spotify-Clone/)]
 
 *(Replace `#` with your live site and repo links)*
 
