@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Spotify - Web Player: Music for everyone</title>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+
+    <!-- Particles -->
+    <div id="particles"></div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loader">
+            <div class="spotify-logo-loader">
+                <i class="fa-brands fa-spotify"></i>
+            </div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <p class="loading-text">Loading your music library...</p>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fa-solid fa-check-circle"></i>
+        <span id="toastMessage">Action completed!</span>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-item" data-action="play">
+            <i class="fa-solid fa-play"></i>
+            <span>Play</span>
+        </div>
+        <div class="context-item" data-action="addToQueue">
+            <i class="fa-solid fa-list"></i>
+            <span>Add to queue</span>
+        </div>
+        <div class="context-item" data-action="addToPlaylist">
+            <i class="fa-solid fa-plus"></i>
+            <span>Add to playlist</span>
+        </div>
+        <div class="context-divider"></div>
+        <div class="context-item" data-action="share">
+            <i class="fa-solid fa-share"></i>
+            <span>Share</span>
+        </div>
+        <div class="context-item" data-action="download">
+            <i class="fa-solid fa-download"></i>
+            <span>Download</span>
+        </div>
+    </div>
+
+    <div class="main">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="nav">
+                <div class="nav-option active">
+                    <i class="fa-solid fa-house"></i>
+                    <a href="#" data-page="home">Home</a>
+                </div>
+                <div class="nav-option" id="searchNavBtn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <a href="#" data-page="search">Search</a>
+                </div>
+            </div>
+            <div class="library">
+                <div class="options">
+                    <div class="lib-option nav-option">
+                        <img src="assets/library_icon.png" alt="Library Icon">
+                        <a href="#">Your Library</a>
+                    </div>
+                    <div class="icons">
+                        <i class="fa-solid fa-plus" title="Create playlist" id="createPlaylist"></i>
+                        <i class="fa-solid fa-arrow-right" title="Expand" id="expandLibrary"></i>
+                    </div>
+                </div>
+
+                <!-- Library Filter -->
+                <div class="library-filter">
+                    <button class="filter-chip active" data-filter="all">All</button>
+                    <button class="filter-chip" data-filter="playlists">Playlists</button>
+                    <button class="filter-chip" data-filter="artists">Artists</button>
+                    <button class="filter-chip" data-filter="albums">Albums</button>
+                </div>
+
+                <div class="lib-box">
+                    <!-- Playlist Items -->
+                    <div class="playlist-item" draggable="true">
+                        <img src="assets/card1img.jpeg" alt="Playlist">
+                        <div class="playlist-info">
+                            <h4>Liked Songs</h4>
+                            <p>Playlist • 42 songs</p>
+                        </div>
+                        <i class="fa-solid fa-heart liked-indicator"></i>
+                    </div>
+
+                    <div class="playlist-item" draggable="true">
+                        <img src="assets/card2img.jpeg" alt="Playlist">
+                        <div class="playlist-info">
+                            <h4>My Playlist #1</h4>
+                            <p>Playlist • 28 songs</p>
+                        </div>
+                    </div>
+
+                    <div class="box box-gradient">
+                        <p class="box-p1">Create your first playlist</p>
+                        <p class="box-p2">It's easy, we'll help you</p>
+                        <button class="badge pulse-btn" type="button" id="createPlaylistBtn">
+                            <i class="fa-solid fa-plus"></i>
+                            Create playlist
+                        </button>
+                    </div>
+                    <div class="box box-gradient-2">
+                        <p class="box-p1">Let's find some podcasts to follow</p>
+                        <p class="box-p2">We'll keep you updated on new episodes</p>
+                        <button class="badge" type="button">
+                            <i class="fa-solid fa-podcast"></i>
+                            Browse Podcasts
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
+            <!-- Dynamic Gradient Background -->
+            <div class="gradient-bg dynamic-gradient"></div>
+            
+            <div class="sticky-nav">
+                <div class="sticky-nav-icons">
+                    <button class="nav-arrow" id="backBtn" title="Go back">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <button class="nav-arrow" id="forwardBtn" title="Go forward">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="sticky-nav-option">
+                    <!-- Search Bar -->
+                    <div class="search-container" id="searchContainer">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" class="search-input" placeholder="What do you want to listen to?" id="searchInput">
+                        <i class="fa-solid fa-times clear-search" id="clearSearch"></i>
+                    </div>
+
+                    <button class="badge nav-item premium-btn bt" type="button">
+                        <i class="fa-solid fa-crown"></i>
+                        Explore Premium
+                    </button>
+                    <button class="badge nav-item dark-badge bt install-btn" type="button">
+                        <i class="fa-regular fa-circle-down bt"></i>Install App
+                    </button>
+                    
+                    <!-- Settings Menu -->
+                    <div class="settings-dropdown">
+                        <i class="fa-solid fa-gear settings-icon" id="settingsIcon" title="Settings"></i>
+                        <div class="settings-menu" id="settingsMenu">
+                            <div class="setting-item">
+                                <span>Theme</span>
+                                <select id="themeSelect" class="setting-select">
+                                    <option value="dark">Dark</option>
+                                    <option value="light">Light</option>
+                                    <option value="auto">Auto</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <span>Quality</span>
+                                <select id="qualitySelect" class="setting-select">
+                                    <option value="auto">Automatic</option>
+                                    <option value="high">High</option>
+                                    <option value="normal">Normal</option>
+                                    <option value="low">Low</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <span>Crossfade</span>
+                                <input type="range" min="0" max="12" value="0" class="setting-slider" id="crossfadeSlider">
+                                <span class="slider-value">0s</span>
+                            </div>
+                            <div class="setting-item toggle-item">
+                                <span>Autoplay</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="autoplayToggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="user-profile" id="userProfile">
+                        <img src="https://ui-avatars.com/api/?name=User&background=1db954&color=fff" alt="User" class="user-avatar">
+                        <div class="user-menu" id="userMenu">
+                            <div class="user-menu-item">
+                                <i class="fa-solid fa-user"></i>
+                                <span>Profile</span>
+                            </div>
+                            <div class="user-menu-item">
+                                <i class="fa-solid fa-crown"></i>
+                                <span>Upgrade to Premium</span>
+                            </div>
+                            <div class="user-menu-item">
+                                <i class="fa-solid fa-gear"></i>
+                                <span>Settings</span>
+                            </div>
+                            <div class="menu-divider"></div>
+                            <div class="user-menu-item">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                <span>Log out</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Home Page -->
+            <div class="page-content" id="homePage">
+                <!-- Time-based Greeting -->
+                <div class="greeting-section">
+                    <h1 class="greeting-title" id="greetingTitle">Good evening</h1>
+                    <div class="quick-play-grid">
+                        <div class="quick-play-card" data-playlist="liked">
+                            <img src="assets/card1img.jpeg" alt="Liked Songs">
+                            <span>Liked Songs</span>
+                            <button class="quick-play-btn">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                        </div>
+                        <div class="quick-play-card" data-playlist="discover">
+                            <img src="assets/card2img.jpeg" alt="Discover Weekly">
+                            <span>Discover Weekly</span>
+                            <button class="quick-play-btn">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                        </div>
+                        <div class="quick-play-card" data-playlist="release">
+                            <img src="assets/card3img.jpeg" alt="Release Radar">
+                            <span>Release Radar</span>
+                            <button class="quick-play-btn">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                        </div>
+                        <div class="quick-play-card" data-playlist="daily">
+                            <img src="assets/card4img.jpeg" alt="Daily Mix">
+                            <span>Daily Mix 1</span>
+                            <button class="quick-play-btn">
+                                <i class="fa-solid fa-play"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recently Played Section -->
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="title-icon">🔥</span>
+                        Recently Played
+                    </h2>
+                    <a href="#" class="see-all">See all</a>
+                </div>
+                <div class="cards-container" id="recentlyPlayed">
+                    <div class="card" data-id="1" data-title="Top 50 - Global" data-artist="Spotify">
+                        <div class="card-img-container">
+                            <img src="assets/card1img.jpeg" alt="Top 50 Global" class="card-image">
+                            <div class="card-overlay">
+                                <button class="play-btn">
+                                    <i class="fa-solid fa-play"></i>
+                                </button>
+                                <div class="card-actions">
+                                    <i class="fa-regular fa-heart card-action-icon" title="Like"></i>
+                                    <i class="fa-solid fa-ellipsis card-action-icon" title="More"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-title">Top 50 - Global</p>
+                        <p class="card-info">Your daily updates of the most played tracks...</p>
+                    </div>
+                </div>
+
+                <!-- Trending Section -->
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="title-icon">📈</span>
+                        Trending now near you
+                    </h2>
+                    <a href="#" class="see-all">See all</a>
+                </div>
+                <div class="cards-container" id="trendingSection">
+                    <div class="card" data-id="2" data-title="Mega Hit Mix" data-artist="Spotify">
+                        <div class="card-img-container">
+                            <img src="assets/card2img.jpeg" alt="Trending playlist" class="card-image">
+                            <div class="card-overlay">
+                                <button class="play-btn">
+                                    <i class="fa-solid fa-play"></i>
+                                </button>
+                                <div class="card-actions">
+                                    <i class="fa-regular fa-heart card-action-icon"></i>
+                                    <i class="fa-solid fa-ellipsis card-action-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-title">Mega Hit Mix</p>
+                        <p class="card-info">A mega mix of 75 favorites from the last few years!</p>
+                    </div>
+                    <div class="card" data-id="3" data-title="All Out 2010s" data-artist="Spotify">
+                        <div class="card-img-container">
+                            <img src="assets/card3img.jpeg" alt="Trending playlist" class="card-image">
+                            <div class="card-overlay">
+                                <button class="play-btn">
+                                    <i class="fa-solid fa-play"></i>
+                                </button>
+                                <div class="card-actions">
+                                    <i class="fa-regular fa-heart card-action-icon"></i>
+                                    <i class="fa-solid fa-ellipsis card-action-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-title">All Out 2010s</p>
+                        <p class="card-info">The biggest songs of the 2010s.</p>
+                    </div>
+                    <div class="card" data-id="4" data-title="Rock Classics" data-artist="Spotify">
+                        <div class="card-img-container">
+                            <img src="assets/card4img.jpeg" alt="Trending playlist" class="card-image">
+                            <div class="card-overlay">
+                                <button class="play-btn">
+                                    <i class="fa-solid fa-play"></i>
+                                </button>
+                                <div class="card-actions">
+                                    <i class="fa-regular fa-heart card-action-icon"></i>
+                                    <i class="fa-solid fa-ellipsis card-action-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-title">Rock Classics</p>
+                        <p class="card-info">Rock legends & epic songs that continue to inspire...</p>
+                    </div>
+                    <div class="card" data-id="5" data-title="Chill Hits" data-artist="Spotify">
+                        <div class="card-img-container">
+                            <img src="assets/card3img.jpeg" alt="Trending playlist" class="card-image">
+                            <div class="card-overlay">
+                                <button class="play-btn">
+                                    <i class="fa-solid fa-play"></i>
+                                </button>
+                                <div class="card-actions">
+                                    <i class="fa-regular fa-heart card-action-icon"></i>
+                                    <i class="fa-solid fa-ellipsis card-action-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-title">Chill Hits</p>
+                        <p class="card-info">Kick back to the best new and recent chill hits.</p>
+                    </div>
+                    <div class="card" data-id="6" data-title="Pop Rising" data-artist="Spotify">
+                        <div class="card-img-container">
+                            <img src="assets/card4img.jpeg" alt="Trending playlist" class="card-image">
+                            <div class="card-overlay">
+                                <button class="play-btn">
+                                    <i class="fa-solid fa-play"></i>
+                                </button>
+                                <div class="card-actions">
+                                    <i class="fa-regular fa-heart card-action-icon"></i>
+                                    <i class="fa-solid fa-ellipsis card-action-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-title">Pop Rising</p>
+                        <p class="card-info">The new pop music on the rise right now.</p>
+                    </div>
+                </div>
+
+                <!-- Featured Charts Section -->
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="title-icon">🏆</span>
+                        Featured Charts
+                    </h2>
+                    <a href="#" class="see-all">See all</a>
+                </div>
+                <div class="cards-container">
+                    <div class="card" data-id="7" data-title="Top Songs - Global" data-artist="Spotify">
+                        <div class="card-img-container">
+                            <img src="assets/card5img.jpeg" alt="Featured chart" class="card-image">
+                            <div class="card-overlay">
+                                <button class="play-btn">
+                                    <i class="fa-solid fa-play"></i>
+                                </button>
+                                <div class="card-actions">
+                                    <i class="fa-regular fa-heart card-action-icon"></i>
+                                    <i class="fa-solid fa-ellipsis card-action-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-title">Top Songs - Global</p>
+                        <p class="card-info">Your weekly update of the most played tracks.</p>
+                    </div>
+                    <div class="card" data-id="8" data-title="Top Songs - USA" data-artist="Spotify">
+                        <div class="card-img-container">
+                            <img src="assets/card6img.jpeg" alt="Featured chart" class="card-image">
+                            <div class="card-overlay">
+                                <button class="play-btn">
+                                    <i class="fa-solid fa-play"></i>
+                                </button>
+                                <div class="card-actions">
+                                    <i class="fa-regular fa-heart card-action-icon"></i>
+                                    <i class="fa-solid fa-ellipsis card-action-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-title">Top Songs - USA</p>
+                        <p class="card-info">Your weekly update of the most played tracks.</p>
+                    </div>
+                    <div class="card" data-id="9" data-title="Viral 50 - Global" data-artist="Spotify">
+                        <div class="card-img-container">
+                            <img src="assets/card1img.jpeg" alt="Featured chart" class="card-image">
+                            <div class="card-overlay">
+                                <button class="play-btn">
+                                    <i class="fa-solid fa-play"></i>
+                                </button>
+                                <div class="card-actions">
+                                    <i class="fa-regular fa-heart card-action-icon"></i>
+                                    <i class="fa-solid fa-ellipsis card-action-icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="card-title">Viral 50 - Global</p>
+                        <p class="card-info">Your daily update of the most viral tracks.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Page -->
+            <div class="page-content hidden" id="searchPage">
+                <h1 class="page-title">Search</h1>
+                
+                <!-- Search Results -->
+                <div id="searchResults" class="hidden">
+                    <h2 class="section-title">Search Results</h2>
+                    <div class="cards-container" id="searchResultsContainer"></div>
+                </div>
+
+                <!-- Browse Categories -->
+                <div id="browseCategories">
+                    <h2 class="section-title">Browse all</h2>
+                    <div class="categories-grid">
+                        <div class="category-card" style="background: linear-gradient(135deg, #E13300, #F37335);">
+                            <h3>Podcasts</h3>
+                            <i class="fa-solid fa-podcast category-icon"></i>
+                        </div>
+                        <div class="category-card" style="background: linear-gradient(135deg, #8D67AB, #C89EC4);">
+                            <h3>Made For You</h3>
+                            <i class="fa-solid fa-user category-icon"></i>
+                        </div>
+                        <div class="category-card" style="background: linear-gradient(135deg, #1E3264, #2D46B9);">
+                            <h3>Charts</h3>
+                            <i class="fa-solid fa-chart-simple category-icon"></i>
+                        </div>
+                        <div class="category-card" style="background: linear-gradient(135deg, #E8115B, #DC148C);">
+                            <h3>New Releases</h3>
+                            <i class="fa-solid fa-compact-disc category-icon"></i>
+                        </div>
+                        <div class="category-card" style="background: linear-gradient(135deg, #27856A, #1DB954);">
+                            <h3>Discover</h3>
+                            <i class="fa-solid fa-compass category-icon"></i>
+                        </div>
+                        <div class="category-card" style="background: linear-gradient(135deg, #8E2C4B, #B34774);">
+                            <h3>Live Events</h3>
+                            <i class="fa-solid fa-music category-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="line"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Music Player -->
+    <div class="music-player">
+        <!-- Advanced Audio Visualizer -->
+        <canvas id="audioCanvas" class="audio-canvas"></canvas>
+
+        <div class="album">
+            <img src="assets/album_picture.jpeg" alt="Album cover" class="music-image" id="albumArt">
+            <div class="song-info">
+                <h5 id="songTitle">Daylight</h5>
+                <p id="artistName">David Kushner</p>
+            </div>
+            <div class="music-icons">
+                <i class="fa-regular fa-heart music-icon-1" id="likeBtn" title="Like"></i>
+                <i class="fa-solid fa-window-maximize music-icon-2" id="pipBtn" title="Picture-in-Picture"></i>
+            </div>
+        </div>
+
+        <div class="player">
+            <div class="player-control">
+                <button class="player-control-icon shuffle-icon" id="shuffleBtn" title="Shuffle">
+                    <i class="fa-solid fa-shuffle"></i>
+                </button>
+                <button class="player-control-icon" id="prevBtn" title="Previous">
+                    <i class="fa-solid fa-step-backward"></i>
+                </button>
+                <button class="player-control-icon play-icon" id="playBtn" title="Play">
+                    <i class="fa-solid fa-play"></i>
+                </button>
+                <button class="player-control-icon" id="nextBtn" title="Next">
+                    <i class="fa-solid fa-step-forward"></i>
+                </button>
+                <button class="player-control-icon repeat-icon" id="repeatBtn" title="Repeat">
+                    <i class="fa-solid fa-repeat"></i>
+                </button>
+            </div>
+            <div class="playback-bar">
+                <span class="curr-time" id="currentTime">0:00</span>
+                <div class="progress-container">
+                    <input type="range" min="0" max="100" value="0" step="0.1" class="progress-bar" id="progressBar">
+                    <div class="progress-filled" id="progressFilled"></div>
+                </div>
+                <span class="tot-time" id="totalTime">3:33</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <!-- Lyrics Button -->
+            <button class="control-icon-text" id="lyricsBtn" title="Lyrics">
+                <i class="fa-solid fa-microphone"></i>
+            </button>
+            
+            <!-- Queue Button -->
+            <button class="control-icon-text" id="queueBtn" title="Queue">
+                <i class="fa-solid fa-list"></i>
+            </button>
+            
+            <!-- Connect to Device -->
+            <button class="control-icon-text" id="devicesBtn" title="Connect to a device">
+                <i class="fa-solid fa-desktop"></i>
+            </button>
+            
+            <!-- Volume Control -->
+            <button class="control-icon-text" id="volumeIcon" title="Volume">
+                <i class="fa-solid fa-volume-high"></i>
+            </button>
+            <div class="volume-container">
+                <input type="range" min="0" max="100" value="50" step="1" class="control-bar" id="volumeBar">
+                <div class="volume-filled" id="volumeFilled"></div>
+            </div>
+            
+            <!-- Equalizer -->
+            <button class="control-icon-text" id="equalizerBtn" title="Equalizer">
+                <i class="fa-solid fa-sliders"></i>
+            </button>
+            
+            <!-- Full Screen -->
+            <button class="control-icon-text" id="fullscreenBtn" title="Full screen">
+                <i class="fa-solid fa-maximize"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Queue Panel -->
+    <div class="side-panel queue-panel" id="queuePanel">
+        <div class="panel-header">
+            <h3>Queue</h3>
+            <button class="close-panel" id="closeQueue">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+        <div class="panel-content">
+            <div class="now-playing-section">
+                <h4>Now Playing</h4>
+                <div class="queue-item active">
+                    <img src="assets/album_picture.jpeg" alt="Album">
+                    <div class="queue-item-info">
+                        <h5>Daylight</h5>
+                        <p>David Kushner</p>
+                    </div>
+                    <span class="queue-item-duration">3:33</span>
+                </div>
+            </div>
+            <div class="next-up-section">
+                <h4>Next Up</h4>
+                <div class="queue-list" id="queueList">
+                    <div class="queue-item" draggable="true">
+                        <div class="drag-handle">
+                            <i class="fa-solid fa-grip-vertical"></i>
+                        </div>
+                        <img src="assets/card1img.jpeg" alt="Album">
+                        <div class="queue-item-info">
+                            <h5>Song Title 1</h5>
+                            <p>Artist Name</p>
+                        </div>
+                        <span class="queue-item-duration">3:45</span>
+                        <button class="remove-from-queue">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="queue-item" draggable="true">
+                        <div class="drag-handle">
+                            <i class="fa-solid fa-grip-vertical"></i>
+                        </div>
+                        <img src="assets/card2img.jpeg" alt="Album">
+                        <div class="queue-item-info">
+                            <h5>Song Title 2</h5>
+                            <p>Artist Name</p>
+                        </div>
+                        <span class="queue-item-duration">4:12</span>
+                        <button class="remove-from-queue">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lyrics Panel -->
+    <div class="side-panel lyrics-panel" id="lyricsPanel">
+        <div class="panel-header">
+            <h3>Lyrics</h3>
+            <button class="close-panel" id="closeLyrics">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+        <div class="panel-content lyrics-content">
+            <div class="lyrics-scroll" id="lyricsScroll">
+                <p class="lyric-line active">Walking through the streets at midnight</p>
+                <p class="lyric-line">Chasing shadows in the moonlight</p>
+                <p class="lyric-line">Every step I take reminds me</p>
+                <p class="lyric-line">Of the moments left behind me</p>
+                <p class="lyric-line">Oh, I'm searching for the daylight</p>
+                <p class="lyric-line">Breaking through the endless night</p>
+                <p class="lyric-line">Holding on with all my might</p>
+                <p class="lyric-line">Till I find my way to daylight</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Equalizer Panel -->
+    <div class="side-panel equalizer-panel" id="equalizerPanel">
+        <div class="panel-header">
+            <h3>Equalizer</h3>
+            <button class="close-panel" id="closeEqualizer">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+        <div class="panel-content equalizer-content">
+            <div class="eq-presets">
+                <button class="eq-preset active">Normal</button>
+                <button class="eq-preset">Bass Boost</button>
+                <button class="eq-preset">Treble Boost</button>
+                <button class="eq-preset">Vocal</button>
+                <button class="eq-preset">Electronic</button>
+            </div>
+            <div class="eq-sliders">
+                <div class="eq-slider-container">
+                    <input type="range" min="-12" max="12" value="0" class="eq-slider" orient="vertical">
+                    <span class="eq-label">60Hz</span>
+                </div>
+                <div class="eq-slider-container">
+                    <input type="range" min="-12" max="12" value="0" class="eq-slider" orient="vertical">
+                    <span class="eq-label">230Hz</span>
+                </div>
+                <div class="eq-slider-container">
+                    <input type="range" min="-12" max="12" value="0" class="eq-slider" orient="vertical">
+                    <span class="eq-label">910Hz</span>
+                </div>
+                <div class="eq-slider-container">
+                    <input type="range" min="-12" max="12" value="0" class="eq-slider" orient="vertical">
+                    <span class="eq-label">4kHz</span>
+                </div>
+                <div class="eq-slider-container">
+                    <input type="range" min="-12" max="12" value="0" class="eq-slider" orient="vertical">
+                    <span class="eq-label">14kHz</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Playlist Modal -->
+    <div class="modal" id="playlistModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>
+                    <i class="fa-solid fa-music"></i>
+                    Create Playlist
+                </h3>
+                <button class="close-modal" id="closeModal">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="playlist-image-upload">
+                    <div class="image-preview" id="imagePreview">
+                        <i class="fa-solid fa-image"></i>
+                        <p>Choose photo</p>
+                    </div>
+                    <input type="file" id="playlistImageInput" accept="image/*" hidden>
+                </div>
+                <input type="text" id="playlistName" placeholder="My Playlist #1" class="modal-input">
+                <textarea id="playlistDesc" placeholder="Add an optional description" class="modal-textarea"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel-btn" id="cancelBtn">Cancel</button>
+                <button class="modal-btn create-btn" id="confirmCreateBtn">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Panel -->
+    <div class="shortcuts-panel" id="shortcutsPanel">
+        <div class="shortcuts-content">
+            <h3>Keyboard Shortcuts</h3>
+            <div class="shortcut-list">
+                <div class="shortcut-item">
+                    <span>Space</span>
+                    <p>Play/Pause</p>
+                </div>
+                <div class="shortcut-item">
+                    <span>→</span>
+                    <p>Next</p>
+                </div>
+                <div class="shortcut-item">
+                    <span>←</span>
+                    <p>Previous</p>
+                </div>
+                <div class="shortcut-item">
+                    <span>↑</span>
+                    <p>Volume Up</p>
+                </div>
+                <div class="shortcut-item">
+                    <span>↓</span>
+                    <p>Volume Down</p>
+                </div>
+                <div class="shortcut-item">
+                    <span>M</span>
+                    <p>Mute</p>
+                </div>
+                <div class="shortcut-item">
+                    <span>L</span>
+                    <p>Like/Unlike</p>
+                </div>
+                <div class="shortcut-item">
+                    <span>Q</span>
+                    <p>Queue</p>
+                </div>
+                <div class="shortcut-item">
+                    <span>F</span>
+                    <p>Full Screen</p>
+                </div>
+                <div class="shortcut-item">
+                    <span>?</span>
+                    <p>Shortcuts</p>
+                </div>
+            </div>
+            <button class="close-shortcuts" id="closeShortcuts">Close</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
